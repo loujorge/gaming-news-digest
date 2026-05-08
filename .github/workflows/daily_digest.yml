@@ -2,7 +2,7 @@ name: Daily Gaming & Cinema Digest
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # 08:00 Portugal (WEST, UTC+1)
+    - cron: '0 8 * * *'  # 09:00 Portugal (WEST, UTC+1)
   workflow_dispatch:
 
 jobs:
