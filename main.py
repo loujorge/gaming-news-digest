@@ -6,6 +6,7 @@ import sys
 from gaming_news_digest.config import load_config, load_sources
 from gaming_news_digest.deduplicator import deduplicate_articles
 from gaming_news_digest.fetcher import fetch_all_articles
+from gaming_news_digest.history import filter_new_articles, load_history, save_history
 from gaming_news_digest.notifiers import get_notifier
 from gaming_news_digest.summarizer import format_digest_plaintext, summarize_articles
 
@@ -37,6 +38,12 @@ def run_pipeline() -> None:
     articles = deduplicate_articles(raw_articles, config.dedupe_threshold)
     logger.info("After deduplication: %d articles", len(articles))
 
+    sent_urls = load_history()
+    articles = filter_new_articles(articles, sent_urls)
+    if not articles:
+        logger.info("No new articles to send. Exiting.")
+        return
+
     if config.summarize and config.anthropic_api_key:
         logger.info("Generating AI summary with Claude Haiku...")
         digest = summarize_articles(articles, config.anthropic_api_key)
@@ -51,6 +58,8 @@ def run_pipeline() -> None:
 
     if success:
         logger.info("Digest sent successfully!")
+        new_urls = {a.url for a in articles}
+        save_history(sent_urls | new_urls)
     else:
         logger.error("Failed to send digest")
         sys.exit(1)
