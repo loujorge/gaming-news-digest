@@ -26,7 +26,9 @@ class TelegramNotifier(BaseNotifier):
 
         try:
             response = requests.post(url, json=payload, timeout=30)
-            response.raise_for_status()
+            if not response.ok:
+                logger.error("Telegram API error %d: %s", response.status_code, response.text)
+                return False
             logger.info("Message sent via Telegram (chat_id: %s)", self.chat_id)
             return True
         except requests.RequestException as e:
