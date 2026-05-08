@@ -5,6 +5,9 @@ on:
     - cron: '0 8,12,16 * * *'  # 09:00, 13:00, 17:00 Portugal (WEST, UTC+1)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   run-digest:
     runs-on: ubuntu-latest
