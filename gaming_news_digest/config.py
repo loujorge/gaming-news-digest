@@ -72,10 +72,10 @@ def load_config() -> AppConfig:
         evolution_api_key=os.getenv("EVOLUTION_API_KEY"),
         evolution_instance=os.getenv("EVOLUTION_INSTANCE"),
         evolution_to=os.getenv("EVOLUTION_TO"),
-        dedupe_threshold=int(os.getenv("DEDUPE_THRESHOLD", "85")),
-        max_articles_per_source=int(os.getenv("MAX_ARTICLES_PER_SOURCE", "5")),
-        log_level=os.getenv("LOG_LEVEL", "INFO"),
-        sources_path=os.getenv("SOURCES_PATH", "data/sources.json"),
+        dedupe_threshold=int(os.getenv("DEDUPE_THRESHOLD") or "85"),
+        max_articles_per_source=int(os.getenv("MAX_ARTICLES_PER_SOURCE") or "5"),
+        log_level=os.getenv("LOG_LEVEL") or "INFO",
+        sources_path=os.getenv("SOURCES_PATH") or "data/sources.json",
     )
 
     logger.info("Config loaded: %s", config)
